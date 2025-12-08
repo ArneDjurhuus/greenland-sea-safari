@@ -1,6 +1,7 @@
 "use client";
 
 import { Heading, Text } from "@/components/ui/Typography";
+import Image from "next/image";
 import { ShieldCheck, Anchor, Users } from "lucide-react";
 
 export function BoatSection() {
@@ -38,11 +39,12 @@ export function BoatSection() {
 
                     <div className="lg:w-1/2 relative">
                         <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/20 aspect-[4/3] bg-arctic-night border-4 border-white/5">
-                            <div
-                                className="absolute inset-0 bg-cover bg-center transition-transform hover:scale-105 duration-700"
-                                style={{
-                                    backgroundImage: 'url("/image_of_boat.png")'
-                                }}
+                            <Image
+                                src="/image_of_boat.png"
+                                alt="Poca 600 boat in Disko Bay"
+                                fill
+                                className="object-cover transition-transform hover:scale-105 duration-700"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                         </div>
                         {/* Decorative element */}

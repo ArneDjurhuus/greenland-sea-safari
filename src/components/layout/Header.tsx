@@ -122,47 +122,64 @@ export function Header() {
                 </button>
             </div>
 
-            {/* Mobile Nav */}
+            {/* Mobile Nav Overlay */}
             {mobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 top-[72px] bg-white z-40 flex flex-col p-6 overflow-y-auto animate-in fade-in slide-in-from-top-5">
-                    <nav className="flex flex-col gap-6">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="text-2xl font-serif font-bold text-arctic-blue py-2 border-b border-gray-100"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                        <Link
-                            href="/contact"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="text-2xl font-serif font-bold text-arctic-blue py-2 border-b border-gray-100"
-                        >
-                            Contact
+                <div className="md:hidden fixed inset-0 bg-white z-[60] flex flex-col min-h-[100dvh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
+                    {/* Internal Menu Header */}
+                    <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+                        <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-serif text-2xl font-bold tracking-tight">
+                            <span className="text-arctic-blue">Greenland</span>
+                            <span className="text-arctic-gold">SeaSafari</span>
                         </Link>
-                    </nav>
+                        <button
+                            className="p-2 -mr-2 text-arctic-blue"
+                            onClick={() => setMobileMenuOpen(false)}
+                            aria-label="Close menu"
+                        >
+                            <X className="w-8 h-8" />
+                        </button>
+                    </div>
 
-                    <div className="mt-8">
-                        <p className="text-sm font-bold text-arctic-night/50 uppercase tracking-wider mb-4">Our Tours</p>
-                        <div className="space-y-3">
-                            {tours.map((tour) => (
+                    <div className="flex-1 flex flex-col p-6">
+                        <nav className="flex flex-col gap-4 mb-8">
+                            {navLinks.map((link) => (
                                 <Link
-                                    key={tour.id}
-                                    href={`/book?tourId=${tour.id}`}
+                                    key={link.name}
+                                    href={link.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center gap-4 p-3 bg-arctic-ice/10 rounded-xl active:bg-arctic-blue/10 transition-colors"
+                                    className="text-4xl font-serif font-bold text-arctic-blue py-2"
                                 >
-                                    <img src={tour.image} alt={tour.title} className="w-12 h-12 rounded-lg object-cover" />
-                                    <div className="flex-1">
-                                        <span className="font-bold text-arctic-blue block">{tour.title}</span>
-                                        <span className="text-xs text-arctic-night/60">{tour.duration}</span>
-                                    </div>
-                                    <ChevronRight className="w-5 h-5 text-arctic-blue/50" />
+                                    {link.name}
                                 </Link>
                             ))}
+                            <Link
+                                href="/contact"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-4xl font-serif font-bold text-arctic-blue py-2"
+                            >
+                                Contact
+                            </Link>
+                        </nav>
+
+                        <div className="mt-auto pb-10">
+                            <p className="text-sm font-bold text-arctic-night/50 uppercase tracking-wider mb-6">Our Tours</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {tours.map((tour) => (
+                                    <Link
+                                        key={tour.id}
+                                        href={`/book?tourId=${tour.id}`}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-4 p-4 bg-arctic-ice/10 rounded-xl active:bg-arctic-blue/10 transition-colors border border-transparent active:border-arctic-ice/20"
+                                    >
+                                        <img src={tour.image} alt={tour.title} className="w-16 h-16 rounded-lg object-cover" />
+                                        <div className="flex-1 min-w-0">
+                                            <span className="font-bold text-arctic-blue text-lg block leading-tight mb-1 truncate">{tour.title}</span>
+                                            <span className="text-sm text-arctic-night/60">{tour.duration} • {tour.price}</span>
+                                        </div>
+                                        <ChevronRight className="w-6 h-6 text-arctic-blue/50" />
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

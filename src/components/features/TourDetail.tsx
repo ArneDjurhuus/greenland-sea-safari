@@ -143,6 +143,20 @@ export function TourDetail({ tour }: TourDetailProps) {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Fixed Booking Bar */}
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-arctic-ice/20 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between">
+                <div>
+                    <p className="text-xs text-arctic-night/60">From</p>
+                    <p className="text-xl font-bold text-arctic-blue">{tour.price}</p>
+                </div>
+                <Link
+                    href={`/book?tourId=${tour.id}`}
+                    className="inline-flex items-center justify-center rounded-lg bg-arctic-blue text-white px-8 py-3 font-bold shadow-lg hover:bg-arctic-blue/90"
+                >
+                    Book Now
+                </Link>
+            </div>
         </div>
     );
 }

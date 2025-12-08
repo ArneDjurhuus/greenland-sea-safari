@@ -11,13 +11,13 @@ import Image from "next/image";
 
 export function ToursSection() {
     return (
-        <div id="tours" className="py-24 bg-arctic-white relative overflow-hidden">
+        <div id="tours" className="py-16 md:py-24 bg-arctic-white relative overflow-hidden">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-arctic-ice/10 rounded-full blur-3xl -z-10" />
             <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-arctic-gold/5 rounded-full blur-3xl -z-10" />
 
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
+                <div className="text-center mb-10 md:mb-16">
                     <Heading level={2} className="mb-4">Unforgettable Adventures</Heading>
                     <Text className="max-w-2xl mx-auto">
                         Choose from our curated selection of exclusive tours designed to show you standard Arctic beauty from unique perspectives.

@@ -23,8 +23,8 @@ export default function ContactPage() {
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-16">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div className="container mx-auto px-4 py-12 lg:py-16">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
 
                     {/* Contact Info */}
                     <div className="space-y-8">

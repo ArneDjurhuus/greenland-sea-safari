@@ -124,37 +124,43 @@ export function Header() {
 
             {/* Mobile Nav */}
             {mobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg p-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
-                    {navLinks.map((link) => (
+                <div className="md:hidden fixed inset-0 top-[72px] bg-white z-40 flex flex-col p-6 overflow-y-auto animate-in fade-in slide-in-from-top-5">
+                    <nav className="flex flex-col gap-6">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-2xl font-serif font-bold text-arctic-blue py-2 border-b border-gray-100"
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
                         <Link
-                            key={link.name}
-                            href={link.href}
+                            href="/contact"
                             onClick={() => setMobileMenuOpen(false)}
-                            className="text-lg font-medium text-arctic-blue hover:text-arctic-gold"
+                            className="text-2xl font-serif font-bold text-arctic-blue py-2 border-b border-gray-100"
                         >
-                            {link.name}
+                            Contact
                         </Link>
-                    ))}
-                    <Link
-                        href="/contact"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="text-lg font-medium text-arctic-blue hover:text-arctic-gold"
-                    >
-                        Contact
-                    </Link>
+                    </nav>
 
-                    <div className="pt-4 border-t border-gray-100">
-                        <p className="text-sm font-bold text-arctic-night/50 uppercase tracking-wider mb-2">Book a Tour</p>
-                        <div className="space-y-2">
+                    <div className="mt-8">
+                        <p className="text-sm font-bold text-arctic-night/50 uppercase tracking-wider mb-4">Our Tours</p>
+                        <div className="space-y-3">
                             {tours.map((tour) => (
                                 <Link
                                     key={tour.id}
                                     href={`/book?tourId=${tour.id}`}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center justify-between p-3 bg-arctic-ice/10 rounded-lg hover:bg-arctic-blue/10 transition-colors"
+                                    className="flex items-center gap-4 p-3 bg-arctic-ice/10 rounded-xl active:bg-arctic-blue/10 transition-colors"
                                 >
-                                    <span className="font-medium text-arctic-blue text-sm">{tour.title}</span>
-                                    <ChevronRight className="w-4 h-4 text-arctic-blue/50" />
+                                    <img src={tour.image} alt={tour.title} className="w-12 h-12 rounded-lg object-cover" />
+                                    <div className="flex-1">
+                                        <span className="font-bold text-arctic-blue block">{tour.title}</span>
+                                        <span className="text-xs text-arctic-night/60">{tour.duration}</span>
+                                    </div>
+                                    <ChevronRight className="w-5 h-5 text-arctic-blue/50" />
                                 </Link>
                             ))}
                         </div>

@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-arctic-blue: #0A2540;
+  --color-arctic-ice: #A8D5E5;
+  --color-arctic-green: #2ECC71;
+  --color-arctic-gold: #F4D03F;
+  --color-arctic-white: #F8FAFC;
+  --color-arctic-night: #1A1A2E;
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+}
+
+@layer base {
+  body {
+    @apply bg-arctic-white text-arctic-night font-sans antialiased;
+  }
+}

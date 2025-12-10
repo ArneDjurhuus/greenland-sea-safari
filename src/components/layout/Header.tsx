@@ -22,6 +22,9 @@ export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    // Hide header on admin pages
+    if (pathname?.startsWith('/admin')) return null;
+
     // Check if current page needs dark text header (light background pages)
     const needsDarkText = LIGHT_HEADER_PAGES.some(page => pathname.startsWith(page));
     // Use dark text if scrolled, mobile menu open, or on a light background page

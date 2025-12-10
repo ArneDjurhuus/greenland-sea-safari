@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Heading, Text } from "@/components/ui/Typography";
 import { motion } from "framer-motion";
 import { Play, X, Volume2, VolumeX } from "lucide-react";
+import { WeatherWidget } from "@/components/features/WeatherWidget";
 
 // Configuration: Set to true when you have a background video ready
 const USE_VIDEO_BACKGROUND = false;
@@ -101,11 +102,21 @@ export function HeroSection() {
 
             {/* Content */}
             <div className="container relative z-10 px-4 text-center">
+                {/* Weather Widget - Top Right Absolute */}
+                <div className="absolute top-0 right-4 md:right-8 -mt-20 md:-mt-32 hidden lg:block">
+                    <WeatherWidget />
+                </div>
+
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                 >
+                    {/* Mobile Weather Widget */}
+                    <div className="lg:hidden flex justify-center mb-8">
+                        <WeatherWidget />
+                    </div>
+
                     <Heading level={1} className="text-white mb-6 drop-shadow-lg">
                         Experience the Magic of <br className="hidden md:block" />
                         <span className="text-transparent bg-clip-text bg-linear-to-r from-arctic-ice to-arctic-gold">

@@ -4,8 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { BookingCalendar } from "./BookingCalendar";
 import { Button } from "@/components/ui/Button";
-import { Check, User, Users, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, User, Users, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Tour } from '@/data/tours';
+import { createBooking } from "@/app/actions/createBooking";
 
 interface BookingFormProps {
     tour: Tour;
@@ -16,9 +17,10 @@ export function BookingForm({ tour }: BookingFormProps) {
     const [date, setDate] = useState<Date | undefined>();
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
-    const [formData, setFormData] = useState({ name: '', email: '' });
-    const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+    const [errors, setErrors] = useState<{ name?: string; email?: string; submit?: string }>({});
     const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const pricePerAdult = parseInt(tour.price.replace(/\D/g, ''));
     const pricePerChild = Math.round(pricePerAdult * 0.5);
@@ -46,10 +48,34 @@ export function BookingForm({ tour }: BookingFormProps) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (validateForm()) {
-            setStep(3);
+        if (!validateForm()) return;
+        if (!date) return;
+
+        setIsSubmitting(true);
+        setErrors({});
+
+        try {
+            const data = new FormData();
+            data.append('tourSlug', tour.id); // Using id as slug
+            data.append('date', date.toISOString()); // Or format as YYYY-MM-DD
+            data.append('guests', (adults + children).toString());
+            data.append('name', formData.name);
+            data.append('email', formData.email);
+            data.append('phone', formData.phone);
+            
+            const result = await createBooking({}, data);
+
+            if (result.success) {
+                setStep(3);
+            } else {
+                setErrors(prev => ({ ...prev, submit: result.error || 'Something went wrong' }));
+            }
+        } catch (err) {
+            setErrors(prev => ({ ...prev, submit: 'An unexpected error occurred' }));
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -259,7 +285,34 @@ export function BookingForm({ tour }: BookingFormProps) {
                                             <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">{errors.email}</p>
                                         )}
                                     </div>
-                                    <Button type="submit" size="lg" className="w-full mt-4">Complete Request</Button>
+                                    <div>
+                                        <label htmlFor="booking-phone" className="block text-sm font-medium text-arctic-blue mb-1">
+                                            Phone Number
+                                        </label>
+                                        <input 
+                                            type="tel" 
+                                            id="booking-phone"
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            autoComplete="tel"
+                                            className="w-full p-3 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-arctic-blue/20"
+                                        />
+                                    </div>
+                                    {errors.submit && (
+                                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded-md border border-red-100">
+                                            {errors.submit}
+                                        </div>
+                                    )}
+                                    <Button type="submit" size="lg" className="w-full mt-4" disabled={isSubmitting}>
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            'Complete Request'
+                                        )}
+                                    </Button>
                                 </form>
                             </div>
                         </section>

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Heading } from '@/components/ui/Typography';
-import { Search, Filter, Download, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, Download, MoreHorizontal, Check, X, Clock, Trash2, CreditCard } from 'lucide-react';
+import { updateBookingStatus, deleteBooking } from '@/app/actions/bookingActions';
 
 // Define the shape of the booking data we expect from the server
 export type BookingData = {
@@ -12,6 +13,7 @@ export type BookingData = {
     tour_date: string;
     guest_count: number;
     status: string;
+    payment_status?: string;
     total_price_dkk: number;
     tours: {
         title: string;
@@ -25,6 +27,8 @@ interface BookingsClientProps {
 export default function BookingsClient({ initialBookings }: BookingsClientProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [openMenu, setOpenMenu] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
 
     const filteredBookings = initialBookings.filter(booking => {
         const matchesSearch = 
@@ -37,6 +41,22 @@ export default function BookingsClient({ initialBookings }: BookingsClientProps)
         return matchesSearch && matchesStatus;
     });
 
+    const handleStatusChange = (bookingId: string, newStatus: 'pending' | 'confirmed' | 'cancelled' | 'completed') => {
+        startTransition(async () => {
+            await updateBookingStatus(bookingId, newStatus);
+            setOpenMenu(null);
+        });
+    };
+
+    const handleDelete = (bookingId: string) => {
+        if (confirm('Are you sure you want to delete this booking?')) {
+            startTransition(async () => {
+                await deleteBooking(bookingId);
+                setOpenMenu(null);
+            });
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -48,9 +68,6 @@ export default function BookingsClient({ initialBookings }: BookingsClientProps)
                     <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
                         <Download className="w-4 h-4" />
                         Export
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-arctic-blue text-white rounded-lg text-sm font-medium hover:bg-arctic-blue/90 shadow-lg shadow-arctic-blue/20">
-                        + New Booking
                     </button>
                 </div>
             </div>
@@ -78,6 +95,7 @@ export default function BookingsClient({ initialBookings }: BookingsClientProps)
                         <option value="confirmed">Confirmed</option>
                         <option value="pending">Pending</option>
                         <option value="cancelled">Cancelled</option>
+                        <option value="completed">Completed</option>
                     </select>
                 </div>
             </div>
@@ -94,20 +112,21 @@ export default function BookingsClient({ initialBookings }: BookingsClientProps)
                                 <th className="px-6 py-4 font-medium">Date</th>
                                 <th className="px-6 py-4 font-medium">Guests</th>
                                 <th className="px-6 py-4 font-medium">Status</th>
+                                <th className="px-6 py-4 font-medium">Payment</th>
                                 <th className="px-6 py-4 font-medium text-right">Amount</th>
-                                <th className="px-6 py-4 font-medium"></th>
+                                <th className="px-6 py-4 font-medium">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {filteredBookings.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
+                                    <td colSpan={9} className="px-6 py-8 text-center text-gray-500">
                                         No bookings found.
                                     </td>
                                 </tr>
                             ) : (
                                 filteredBookings.map((booking) => (
-                                    <tr key={booking.id} className="hover:bg-gray-50/50 transition-colors group">
+                                    <tr key={booking.id} className={`hover:bg-gray-50/50 transition-colors ${isPending ? 'opacity-50' : ''}`}>
                                         <td className="px-6 py-4 font-mono text-gray-500 text-xs">{booking.id.slice(0, 8)}...</td>
                                         <td className="px-6 py-4 font-medium text-gray-900">
                                             {booking.customer_name}
@@ -121,17 +140,73 @@ export default function BookingsClient({ initialBookings }: BookingsClientProps)
                                                 ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : ''}
                                                 ${booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : ''}
                                                 ${booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : ''}
+                                                ${booking.status === 'completed' ? 'bg-blue-100 text-blue-800' : ''}
                                             `}>
                                                 {booking.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
+                                                ${booking.payment_status === 'paid' ? 'bg-green-100 text-green-800' : ''}
+                                                ${booking.payment_status === 'unpaid' ? 'bg-gray-100 text-gray-600' : ''}
+                                                ${booking.payment_status === 'refunded' ? 'bg-purple-100 text-purple-800' : ''}
+                                            `}>
+                                                <CreditCard className="w-3 h-3" />
+                                                {booking.payment_status || 'unpaid'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right font-medium text-gray-900">
                                             DKK {booking.total_price_dkk.toLocaleString()}
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <button className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600">
+                                        <td className="px-6 py-4 relative">
+                                            <button 
+                                                onClick={() => setOpenMenu(openMenu === booking.id ? null : booking.id)}
+                                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-gray-600"
+                                            >
                                                 <MoreHorizontal className="w-4 h-4" />
                                             </button>
+                                            
+                                            {/* Dropdown Menu */}
+                                            {openMenu === booking.id && (
+                                                <div className="absolute right-0 top-12 z-10 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1">
+                                                    <button
+                                                        onClick={() => handleStatusChange(booking.id, 'confirmed')}
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                                    >
+                                                        <Check className="w-4 h-4 text-green-600" />
+                                                        Confirm
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleStatusChange(booking.id, 'pending')}
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                                    >
+                                                        <Clock className="w-4 h-4 text-yellow-600" />
+                                                        Mark Pending
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleStatusChange(booking.id, 'completed')}
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                                    >
+                                                        <Check className="w-4 h-4 text-blue-600" />
+                                                        Mark Completed
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleStatusChange(booking.id, 'cancelled')}
+                                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                                    >
+                                                        <X className="w-4 h-4 text-red-600" />
+                                                        Cancel
+                                                    </button>
+                                                    <hr className="my-1" />
+                                                    <button
+                                                        onClick={() => handleDelete(booking.id)}
+                                                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            )}
                                         </td>
                                     </tr>
                                 ))

@@ -60,7 +60,7 @@ export function AboutSection() {
                     <div className="md:w-1/2">
                         <div className="relative rounded-lg overflow-hidden shadow-xl aspect-video">
                             <Image
-                                src="https://images.unsplash.com/photo-1548502621-e8d13af21699?q=80&w=2069"
+                                src="https://images.unsplash.com/photo-1531956531700-dc0ee0f1f9a5?q=80&w=2069"
                                 alt="Captain navigating a boat through Arctic waters"
                                 fill
                                 className="object-cover object-center"

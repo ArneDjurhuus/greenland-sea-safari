@@ -21,7 +21,11 @@ export default async function BookingsPage() {
     }
 
     // Cast the data to the expected type (Supabase types might need generation, but for now we cast)
-    const typedBookings = (bookings || []) as unknown as BookingData[];
+    // Add payment_status to the type
+    const typedBookings = (bookings || []).map(b => ({
+        ...b,
+        payment_status: b.payment_status || 'unpaid'
+    })) as unknown as BookingData[];
 
     return <BookingsClient initialBookings={typedBookings} />;
 }

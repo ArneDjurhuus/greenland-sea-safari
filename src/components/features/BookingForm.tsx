@@ -5,7 +5,7 @@ import Image from "next/image";
 import { BookingCalendar } from "./BookingCalendar";
 import { Button } from "@/components/ui/Button";
 import { Check, User, Users, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
-import { Tour } from '@/data/tours';
+import { Tour } from '@/types/tour';
 import { createBooking } from "@/app/actions/createBooking";
 
 interface BookingFormProps {
@@ -22,7 +22,7 @@ export function BookingForm({ tour }: BookingFormProps) {
     const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const pricePerAdult = parseInt(tour.price.replace(/\D/g, ''));
+    const pricePerAdult = tour.price_dkk;
     const pricePerChild = Math.round(pricePerAdult * 0.5);
     const total = (adults * pricePerAdult) + (children * pricePerChild);
 
@@ -120,13 +120,17 @@ export function BookingForm({ tour }: BookingFormProps) {
                 <div id="mobile-booking-summary" className="px-4 pb-4 border-t border-white/10 pt-4 space-y-3 animate-in slide-in-from-bottom-2 duration-200">
                     <div className="flex gap-3">
                         <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0">
-                            <Image
-                                src={tour.image}
-                                alt=""
-                                fill
-                                className="object-cover"
-                                sizes="64px"
-                            />
+                            {tour.image_url ? (
+                                <Image
+                                    src={tour.image_url}
+                                    alt=""
+                                    fill
+                                    className="object-cover"
+                                    sizes="64px"
+                                />
+                            ) : (
+                                <div className="w-full h-full bg-gray-700" />
+                            )}
                         </div>
                         <div>
                             <p className="font-bold text-sm leading-tight">{tour.title}</p>
@@ -326,13 +330,17 @@ export function BookingForm({ tour }: BookingFormProps) {
 
                         <div className="flex gap-4 mb-6 pb-6 border-b border-white/10">
                             <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
-                                <Image
-                                    src={tour.image}
-                                    alt=""
-                                    fill
-                                    className="object-cover"
-                                    sizes="80px"
-                                />
+                                {tour.image_url ? (
+                                    <Image
+                                        src={tour.image_url}
+                                        alt=""
+                                        fill
+                                        className="object-cover"
+                                        sizes="80px"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-700" />
+                                )}
                             </div>
                             <div>
                                 <p className="font-bold leading-tight mb-1">{tour.title}</p>

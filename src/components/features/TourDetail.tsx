@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { Tour } from '@/data/tours';
+import { Tour } from '@/types/tour';
 import { Button } from '@/components/ui/Button';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Clock, Check, Info } from 'lucide-react';
@@ -23,14 +23,18 @@ export function TourDetail({ tour }: TourDetailProps) {
         <div className="min-h-screen pt-20">
             {/* Hero */}
             <div className="relative h-[60vh] w-full">
-                <Image
-                    src={tour.image}
-                    alt={`${tour.title} - scenic view of the Arctic tour`}
-                    fill
-                    priority
-                    className="object-cover object-center"
-                    sizes="100vw"
-                />
+                {tour.image_url ? (
+                    <Image
+                        src={tour.image_url}
+                        alt={`${tour.title} - scenic view of the Arctic tour`}
+                        fill
+                        priority
+                        className="object-cover object-center"
+                        sizes="100vw"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gray-200" />
+                )}
                 <div className="absolute inset-0 bg-arctic-blue/40 mix-blend-multiply" />
                 <div className="absolute inset-0 bg-linear-to-t from-arctic-white via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 container mx-auto">
@@ -39,7 +43,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                             {tour.duration}
                         </span>
                         <Heading level={1} className="text-arctic-blue mb-4">{tour.title}</Heading>
-                        <p className="text-xl text-arctic-blue/80 font-medium">{tour.price} per person</p>
+                        <p className="text-xl text-arctic-blue/80 font-medium">DKK {tour.price_dkk} per person</p>
                     </div>
                 </div>
             </div>
@@ -52,11 +56,11 @@ export function TourDetail({ tour }: TourDetailProps) {
                         {/* Description */}
                         <section>
                             <Heading level={3} className="mb-4">Experience</Heading>
-                            <Text className="text-lg leading-relaxed">{tour.fullDescription || tour.description}</Text>
+                            <Text className="text-lg leading-relaxed">{tour.description}</Text>
                         </section>
 
-                        {/* Highlights */}
-                        <section>
+                        {/* Highlights - Placeholder/Hidden until added to DB */}
+                        {/* <section>
                             <Heading level={3} className="mb-4">Highlights</Heading>
                             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {tour.highlights.map((item, idx) => (
@@ -66,10 +70,10 @@ export function TourDetail({ tour }: TourDetailProps) {
                                     </li>
                                 ))}
                             </ul>
-                        </section>
+                        </section> */}
 
-                        {/* Itinerary */}
-                        {tour.itinerary && (
+                        {/* Itinerary - Placeholder/Hidden until added to DB */}
+                        {/* {tour.itinerary && (
                             <section>
                                 <Heading level={3} className="mb-6">Itinerary</Heading>
                                 <div className="border-l-2 border-arctic-ice/30 pl-8 space-y-8 relative">
@@ -82,10 +86,10 @@ export function TourDetail({ tour }: TourDetailProps) {
                                     ))}
                                 </div>
                             </section>
-                        )}
+                        )} */}
 
-                        {/* Route Map */}
-                        {tour.route && tour.coordinates && (
+                        {/* Route Map - Placeholder/Hidden until added to DB */}
+                        {/* {tour.route && tour.coordinates && (
                             <section>
                                 <Heading level={3} className="mb-6">Tour Route</Heading>
                                 <InteractiveMap
@@ -95,7 +99,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                                     route={tour.route}
                                 />
                             </section>
-                        )}
+                        )} */}
                     </div>
 
                     {/* Sidebar */}
@@ -104,7 +108,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                         <div className="bg-white p-6 rounded-xl shadow-lg border border-arctic-ice/20">
                             <Heading level={4} className="mb-4">Book This Tour</Heading>
                             <div className="flex justify-between items-center mb-6">
-                                <span className="text-3xl font-bold text-arctic-blue">{tour.price}</span>
+                                <span className="text-3xl font-bold text-arctic-blue">DKK {tour.price_dkk}</span>
                                 <span className="text-sm text-arctic-night/60">/ person</span>
                             </div>
                             <Link
@@ -116,8 +120,8 @@ export function TourDetail({ tour }: TourDetailProps) {
                             <p className="text-xs text-center text-arctic-night/50">Free cancellation up to 48 hours before.</p>
                         </div>
 
-                        {/* Packing List */}
-                        {tour.whatToBring && (
+                        {/* Packing List - Placeholder/Hidden until added to DB */}
+                        {/* {tour.whatToBring && (
                             <div className="bg-arctic-ice/10 p-6 rounded-xl">
                                 <div className="flex items-center gap-2 mb-4">
                                     <Info className="w-5 h-5 text-arctic-blue" />
@@ -131,10 +135,10 @@ export function TourDetail({ tour }: TourDetailProps) {
                                     ))}
                                 </ul>
                             </div>
-                        )}
+                        )} */}
 
-                        {/* Included */}
-                        {tour.included && (
+                        {/* Included - Placeholder/Hidden until added to DB */}
+                        {/* {tour.included && (
                             <div className="bg-arctic-green/5 p-6 rounded-xl">
                                 <Heading level={4} className="text-lg! mb-4 text-arctic-green/80">Included</Heading>
                                 <ul className="space-y-2">
@@ -145,7 +149,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                                     ))}
                                 </ul>
                             </div>
-                        )}
+                        )} */}
                     </div>
                 </div>
             </div>
@@ -154,7 +158,7 @@ export function TourDetail({ tour }: TourDetailProps) {
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-arctic-ice/20 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between">
                 <div>
                     <p className="text-xs text-arctic-night/60">From</p>
-                    <p className="text-xl font-bold text-arctic-blue">{tour.price}</p>
+                    <p className="text-xl font-bold text-arctic-blue">DKK {tour.price_dkk}</p>
                 </div>
                 <Link
                     href={`/book?tourId=${tour.id}`}

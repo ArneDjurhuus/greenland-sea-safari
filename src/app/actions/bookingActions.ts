@@ -2,11 +2,13 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { requireAdmin } from '@/lib/auth'
 
 export async function updateBookingStatus(
     bookingId: string, 
     newStatus: 'pending' | 'confirmed' | 'cancelled' | 'completed'
 ) {
+    await requireAdmin()
     const supabase = await createClient()
 
     const { error } = await supabase
@@ -28,6 +30,7 @@ export async function updatePaymentStatus(
     bookingId: string, 
     newStatus: 'unpaid' | 'paid' | 'refunded'
 ) {
+    await requireAdmin()
     const supabase = await createClient()
 
     const { error } = await supabase
@@ -45,6 +48,7 @@ export async function updatePaymentStatus(
 }
 
 export async function deleteBooking(bookingId: string) {
+    await requireAdmin()
     const supabase = await createClient()
 
     const { error } = await supabase

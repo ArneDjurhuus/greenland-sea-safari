@@ -4,23 +4,39 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Heading } from '@/components/ui/Typography';
-import { Lock } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function AdminLoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const supabase = createClient();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simple mock authentication
-        if (email === 'admin@greenlandseasafari.com' && password === 'admin123') {
-            // Set a cookie or local storage
-            localStorage.setItem('admin-auth', 'true');
+        setError('');
+        setIsLoading(true);
+
+        try {
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (signInError) {
+                setError(signInError.message);
+                return;
+            }
+
             router.push('/admin/dashboard');
-        } else {
-            setError('Invalid credentials');
+            router.refresh();
+        } catch {
+            setError('An unexpected error occurred');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -37,43 +53,53 @@ export default function AdminLoginPage() {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-arctic-night/70 mb-2">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-arctic-night/70 mb-2">Email</label>
                         <input
                             type="email"
+                            id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-3 rounded-lg border border-arctic-ice/30 focus:border-arctic-blue focus:ring-2 focus:ring-arctic-blue/20 outline-none transition-all"
-                            placeholder="admin@greenlandseasafari.com"
+                            placeholder="admin@example.com"
                             required
+                            disabled={isLoading}
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-arctic-night/70 mb-2">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-arctic-night/70 mb-2">Password</label>
                         <input
                             type="password"
+                            id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-4 py-3 rounded-lg border border-arctic-ice/30 focus:border-arctic-blue focus:ring-2 focus:ring-arctic-blue/20 outline-none transition-all"
                             placeholder="••••••••"
                             required
+                            disabled={isLoading}
                         />
                     </div>
 
                     {error && (
-                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100" role="alert">
                             {error}
                         </div>
                     )}
 
-                    <Button type="submit" className="w-full bg-arctic-blue text-white hover:bg-arctic-blue/90 py-6">
-                        Sign In
+                    <Button 
+                        type="submit" 
+                        className="w-full bg-arctic-blue text-white hover:bg-arctic-blue/90 py-6"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Signing in...
+                            </>
+                        ) : (
+                            'Sign In'
+                        )}
                     </Button>
                 </form>
-                
-                <div className="mt-6 text-center text-xs text-arctic-night/40">
-                    <p>Demo Credentials:</p>
-                    <p>admin@greenlandseasafari.com / admin123</p>
-                </div>
             </div>
         </div>
     );

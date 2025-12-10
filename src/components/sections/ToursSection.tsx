@@ -1,15 +1,16 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 
-import { tours } from "@/data/tours";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { Heading, Text } from "@/components/ui/Typography";
 import { Clock } from "lucide-react";
+import { Tour } from "@/types/tour";
 
-export function ToursSection() {
+interface ToursSectionProps {
+    tours: Tour[];
+}
+
+export function ToursSection({ tours }: ToursSectionProps) {
     return (
         <section id="tours" className="py-16 md:py-24 bg-arctic-white relative overflow-hidden" aria-labelledby="tours-section-heading">
             {/* Background decoration */}
@@ -26,18 +27,24 @@ export function ToursSection() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {tours.map((tour) => (
-                        <Link href={`/tours/${tour.id}`} key={tour.id} className="group block h-full">
+                        <Link href={`/tours/${tour.slug}`} key={tour.id} className="group block h-full">
                             <Card className="flex flex-col h-full bg-white border-0 shadow-lg shadow-arctic-blue/5 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
                                 <div className="relative h-48 w-full overflow-hidden">
-                                    <Image
-                                        src={tour.image}
-                                        alt={`${tour.title} - Arctic tour experience`}
-                                        fill
-                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                    />
+                                    {tour.image_url ? (
+                                        <Image
+                                            src={tour.image_url}
+                                            alt={`${tour.title} - Arctic tour experience`}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                                            No Image
+                                        </div>
+                                    )}
                                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-arctic-blue shadow-sm">
-                                        {tour.price}
+                                        DKK {tour.price_dkk}
                                     </div>
                                 </div>
 
@@ -50,13 +57,14 @@ export function ToursSection() {
                                         <Clock size={16} aria-hidden="true" />
                                         <span>{tour.duration}</span>
                                     </div>
-
-                                    <p className="text-sm text-arctic-night/70 mb-6 line-clamp-3 grow">
+                                    
+                                    <p className="text-arctic-night/70 text-sm line-clamp-3 mb-6 grow">
                                         {tour.description}
                                     </p>
-
-                                    <div className="space-y-3 mt-auto">
-                                        <Button className="w-full">View Details</Button>
+                                    
+                                    <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-sm font-medium text-arctic-blue group-hover:text-arctic-gold transition-colors">
+                                        <span>View Details</span>
+                                        <span aria-hidden="true">→</span>
                                     </div>
                                 </div>
                             </Card>

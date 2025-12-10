@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Calendar, Users, Settings, LogOut, Ship } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { signOut } from '@/app/actions/authActions';
 
 export function AdminSidebar() {
     const pathname = usePathname();
@@ -47,13 +48,15 @@ export function AdminSidebar() {
             </nav>
 
             <div className="p-4 border-t border-white/10">
-                <Link
-                    href="/admin"
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:bg-red-500/20 hover:text-red-400 transition-colors"
-                >
-                    <LogOut className="w-5 h-5" />
-                    <span className="font-medium">Sign Out</span>
-                </Link>
+                <form action={signOut}>
+                    <button
+                        type="submit"
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:bg-red-500/20 hover:text-red-400 transition-colors w-full"
+                    >
+                        <LogOut className="w-5 h-5" />
+                        <span className="font-medium">Sign Out</span>
+                    </button>
+                </form>
             </div>
         </div>
     );

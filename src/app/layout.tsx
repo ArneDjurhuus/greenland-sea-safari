@@ -5,6 +5,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsent } from "@/components/features/CookieConsent";
 import { Analytics } from "@vercel/analytics/react";
+import { createClient } from "@/lib/supabase/server";
+import { unstable_noStore as noStore } from 'next/cache';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -54,11 +56,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  noStore();
+  const supabase = await createClient();
+  const { data: tours } = await supabase
+    .from('tours')
+    .select('*')
+    .eq('is_active', true)
+    .order('price_dkk', { ascending: true });
+
   return (
     <html lang="en">
       <body
@@ -71,7 +81,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <Header />
+        <Header tours={tours || []} />
         <main id="main-content" className="min-h-screen">
           {children}
         </main>

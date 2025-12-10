@@ -2,8 +2,10 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function updateSettings(formData: FormData) {
+    await requireAdmin();
     const supabase = await createClient();
     
     const rawData = {

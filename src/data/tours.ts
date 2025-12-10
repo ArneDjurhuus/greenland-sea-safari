@@ -1,4 +1,8 @@
-export interface Tour {
+/**
+ * StaticTour is used for the marketing/display data with extended fields.
+ * This is separate from the database Tour type in @/types/tour.ts
+ */
+export interface StaticTour {
     id: string;
     title: string;
     description: string;
@@ -15,7 +19,10 @@ export interface Tour {
     route?: [number, number][]; // Array of coordinates for the path
 }
 
-export const tours: Tour[] = [
+/** @deprecated Use StaticTour instead */
+export type Tour = StaticTour;
+
+export const tours: StaticTour[] = [
     {
         id: "hot-tub",
         title: "Floating hot tub among icebergs",

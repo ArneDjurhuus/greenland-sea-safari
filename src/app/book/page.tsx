@@ -1,8 +1,8 @@
-import { tours } from "@/data/tours";
 import { BookingForm } from "@/components/features/BookingForm";
 import { notFound } from "next/navigation";
 import { Heading } from "@/components/ui/Typography";
 import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
     title: "Book Your Tour",
@@ -26,7 +26,12 @@ export default async function BookingPage({ searchParams }: PageProps) {
         );
     }
 
-    const tour = tours.find((t) => t.id === tourId);
+    const supabase = await createClient();
+    const { data: tour } = await supabase
+        .from('tours')
+        .select('*')
+        .eq('id', tourId)
+        .single();
 
     if (!tour) {
         notFound();

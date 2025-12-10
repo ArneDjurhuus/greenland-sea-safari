@@ -6,17 +6,17 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
-import { tours } from '@/data/tours';
-
-// Simple utility if @/lib/utils not created yet, usually create-next-app makes it otherwise inline
-// But for now I will inline the cn function in the component or create lib/utils helper.
-// Wait, create-next-app with shadcn-like flags usually creates lib/utils, but I didn't use shadcn CLI.
-// I will create lib/utils.ts as well.
+import { Tour } from '@/types/tour';
+import Image from 'next/image';
 
 // Pages that have light backgrounds at top (no dark hero)
 const LIGHT_HEADER_PAGES = ['/contact', '/book'];
 
-export function Header() {
+interface HeaderProps {
+    tours?: Tour[];
+}
+
+export function Header({ tours = [] }: HeaderProps) {
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -104,18 +104,22 @@ export function Header() {
                                     {tours.map((tour) => (
                                         <Link
                                             key={tour.id}
-                                            href={`/book?tourId=${tour.id}`}
+                                            href={`/tours/${tour.slug}`}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-arctic-ice/10 transition-colors"
                                             onClick={() => setDropdownOpen(false)}
                                         >
-                                            <img
-                                                src={tour.image}
-                                                alt={tour.title}
-                                                className="w-12 h-12 rounded-lg object-cover shrink-0"
-                                            />
+                                            {tour.image_url ? (
+                                                <img
+                                                    src={tour.image_url}
+                                                    alt={tour.title}
+                                                    className="w-12 h-12 rounded-lg object-cover shrink-0"
+                                                />
+                                            ) : (
+                                                <div className="w-12 h-12 rounded-lg bg-gray-200 shrink-0" />
+                                            )}
                                             <div className="min-w-0">
                                                 <p className="text-sm font-bold text-arctic-blue truncate">{tour.title}</p>
-                                                <p className="text-xs text-arctic-night/60">{tour.duration} • {tour.price}</p>
+                                                <p className="text-xs text-arctic-night/60">{tour.duration} • DKK {tour.price_dkk}</p>
                                             </div>
                                         </Link>
                                     ))}
@@ -185,14 +189,18 @@ export function Header() {
                                 {tours.map((tour) => (
                                     <Link
                                         key={tour.id}
-                                        href={`/book?tourId=${tour.id}`}
+                                        href={`/tours/${tour.slug}`}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className="flex items-center gap-4 p-4 bg-arctic-ice/10 rounded-xl active:bg-arctic-blue/10 transition-colors border border-transparent active:border-arctic-ice/20"
                                     >
-                                        <img src={tour.image} alt={tour.title} className="w-16 h-16 rounded-lg object-cover" />
+                                        {tour.image_url ? (
+                                            <img src={tour.image_url} alt={tour.title} className="w-16 h-16 rounded-lg object-cover" />
+                                        ) : (
+                                            <div className="w-16 h-16 rounded-lg bg-gray-200" />
+                                        )}
                                         <div className="flex-1 min-w-0">
                                             <span className="font-bold text-arctic-blue text-lg block leading-tight mb-1 truncate">{tour.title}</span>
-                                            <span className="text-sm text-arctic-night/60">{tour.duration} • {tour.price}</span>
+                                            <span className="text-sm text-arctic-night/60">{tour.duration} • DKK {tour.price_dkk}</span>
                                         </div>
                                         <ChevronRight className="w-6 h-6 text-arctic-blue/50" />
                                     </Link>

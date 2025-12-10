@@ -2,8 +2,10 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createTour(formData: FormData) {
+    await requireAdmin();
     const supabase = await createClient();
     
     const rawData = {
@@ -30,6 +32,7 @@ export async function createTour(formData: FormData) {
 }
 
 export async function updateTour(id: string, formData: FormData) {
+    await requireAdmin();
     const supabase = await createClient();
     
     const rawData = {
@@ -57,6 +60,7 @@ export async function updateTour(id: string, formData: FormData) {
 }
 
 export async function deleteTour(id: string) {
+    await requireAdmin();
     const supabase = await createClient();
 
     const { error } = await supabase
@@ -73,6 +77,7 @@ export async function deleteTour(id: string) {
 }
 
 export async function toggleTourStatus(id: string, isActive: boolean) {
+    await requireAdmin();
     const supabase = await createClient();
 
     const { error } = await supabase

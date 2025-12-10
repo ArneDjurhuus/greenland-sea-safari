@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -12,10 +13,19 @@ import { tours } from '@/data/tours';
 // Wait, create-next-app with shadcn-like flags usually creates lib/utils, but I didn't use shadcn CLI.
 // I will create lib/utils.ts as well.
 
+// Pages that have light backgrounds at top (no dark hero)
+const LIGHT_HEADER_PAGES = ['/contact', '/book'];
+
 export function Header() {
+    const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    // Check if current page needs dark text header (light background pages)
+    const needsDarkText = LIGHT_HEADER_PAGES.some(page => pathname.startsWith(page));
+    // Use dark text if scrolled, mobile menu open, or on a light background page
+    const useDarkText = isScrolled || mobileMenuOpen || needsDarkText;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -35,14 +45,19 @@ export function Header() {
         <header
             className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                isScrolled || mobileMenuOpen ? "bg-white/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6 text-white"
+                useDarkText ? "bg-white/90 backdrop-blur-md shadow-sm py-4" : "bg-transparent py-6"
             )}
             onMouseLeave={() => setDropdownOpen(false)}
         >
             <div className="container mx-auto px-4 flex items-center justify-between">
                 <Link href="/" className="font-serif text-2xl font-bold tracking-tight">
-                    <span className={cn(isScrolled || mobileMenuOpen ? "text-arctic-blue" : "text-white")}>Greenland</span>
-                    <span className="text-arctic-gold">SeaSafari</span>
+                    <span className={cn(
+                        useDarkText ? "text-arctic-blue" : "text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+                    )}>Greenland</span>
+                    <span className={cn(
+                        "text-arctic-gold",
+                        !useDarkText && "drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+                    )}>SeaSafari</span>
                 </Link>
 
                 {/* Desktop Nav */}
@@ -53,7 +68,7 @@ export function Header() {
                             href={link.href}
                             className={cn(
                                 "font-medium transition-colors hover:text-arctic-gold",
-                                isScrolled ? "text-arctic-night" : "text-white/90"
+                                useDarkText ? "text-arctic-night" : "text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
                             )}
                         >
                             {link.name}
@@ -63,7 +78,7 @@ export function Header() {
                         href="/contact"
                         className={cn(
                             "font-medium transition-colors hover:text-arctic-gold",
-                            isScrolled ? "text-arctic-night" : "text-white/90"
+                            useDarkText ? "text-arctic-night" : "text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
                         )}
                     >
                         Contact
@@ -71,9 +86,9 @@ export function Header() {
 
                     <div className="relative group" onMouseEnter={() => setDropdownOpen(true)}>
                         <Button
-                            variant={isScrolled ? "primary" : "outline"}
+                            variant={useDarkText ? "primary" : "outline"}
                             size="sm"
-                            className={cn(!isScrolled && "text-white border-white hover:bg-white/10")}
+                            className={cn(!useDarkText && "text-white border-white hover:bg-white/10")}
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                         >
                             Book Now <ChevronDown className="ml-2 w-4 h-4" />
@@ -115,9 +130,9 @@ export function Header() {
                     aria-expanded={mobileMenuOpen}
                 >
                     {mobileMenuOpen ? (
-                        <X className={isScrolled || mobileMenuOpen ? "text-arctic-blue" : "text-white"} />
+                        <X className="text-arctic-blue" />
                     ) : (
-                        <Menu className={isScrolled ? "text-arctic-blue" : "text-white"} />
+                        <Menu className={useDarkText ? "text-arctic-blue" : "text-white"} />
                     )}
                 </button>
             </div>

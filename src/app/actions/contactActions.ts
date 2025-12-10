@@ -1,6 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { requireAdmin } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 interface ContactFormData {
     name: string;
@@ -35,24 +37,69 @@ export async function submitContactForm(data: ContactFormData) {
             });
 
         if (error) {
-            // If table doesn't exist, log and return success anyway
-            // (the message won't be stored but we don't want to break the UX)
             console.error('Error storing contact message:', error);
-            
-            // For now, just acknowledge the message was received
-            // In production, you'd want to send an email or use a proper service
-            return { 
-                success: true, 
-                message: 'Thank you for your message! We will get back to you soon.' 
-            };
+            throw new Error('Failed to save message');
         }
 
         return { 
             success: true, 
             message: 'Thank you for your message! We will get back to you soon.' 
         };
-    } catch (err) {
-        console.error('Contact form submission error:', err);
-        return { success: false, error: 'An unexpected error occurred. Please try again.' };
+    } catch (error) {
+        console.error('Contact form error:', error);
+        return { success: false, error: 'Something went wrong. Please try again.' };
     }
+}
+
+export async function getMessages() {
+    await requireAdmin();
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from('contact_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching messages:', error);
+        throw new Error('Failed to fetch messages');
+    }
+
+    return data;
+}
+
+export async function markMessageAsRead(id: string) {
+    await requireAdmin();
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from('contact_messages')
+        .update({ is_read: true })
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error marking message as read:', error);
+        throw new Error('Failed to update message');
+    }
+
+    revalidatePath('/admin/messages');
+    return { success: true };
+}
+
+export async function deleteMessage(id: string) {
+    await requireAdmin();
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from('contact_messages')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting message:', error);
+        throw new Error('Failed to delete message');
+    }
+
+    revalidatePath('/admin/messages');
+    return { success: true };
 }

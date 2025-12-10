@@ -5,14 +5,23 @@ export default async function DashboardPage() {
     const supabase = await createClient();
 
     // Fetch all bookings to calculate stats
-    // In a real app with many records, you'd use .count() or specific aggregate queries
-    const { data: bookings, error } = await supabase
+    const { data: bookings, error: bookingsError } = await supabase
         .from('bookings')
         .select('total_price_dkk, status, guest_count');
 
-    if (error) {
-        console.error('Error fetching dashboard stats:', error);
+    if (bookingsError) {
+        console.error('Error fetching dashboard stats:', bookingsError);
         return <div>Error loading dashboard.</div>;
+    }
+
+    // Fetch unread messages count
+    const { count: unreadMessagesCount, error: messagesError } = await supabase
+        .from('contact_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_read', false);
+
+    if (messagesError) {
+        console.error('Error fetching messages stats:', messagesError);
     }
 
     const stats = (bookings || []).reduce((acc, booking) => {
@@ -42,6 +51,7 @@ export default async function DashboardPage() {
         totalRevenue: stats.totalRevenue,
         totalBookings: stats.totalBookings,
         pendingBookings: stats.pendingBookings,
-        totalGuests: stats.guest_count
+        totalGuests: stats.guest_count,
+        unreadMessages: unreadMessagesCount || 0
     }} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Heading } from '@/components/ui/Typography';
-import { DollarSign, Users, Calendar, TrendingUp } from 'lucide-react';
+import { DollarSign, Users, Calendar, TrendingUp, Mail } from 'lucide-react';
 
 interface DashboardClientProps {
     stats: {
@@ -9,6 +9,7 @@ interface DashboardClientProps {
         totalBookings: number;
         pendingBookings: number;
         totalGuests: number;
+        unreadMessages: number;
     }
 }
 
@@ -18,6 +19,7 @@ export default function DashboardClient({ stats }: DashboardClientProps) {
         { name: 'Total Bookings', value: stats.totalBookings, icon: Calendar, color: 'bg-blue-500' },
         { name: 'Pending Requests', value: stats.pendingBookings, icon: TrendingUp, color: 'bg-orange-500' },
         { name: 'Total Guests', value: stats.totalGuests, icon: Users, color: 'bg-purple-500' },
+        { name: 'Unread Messages', value: stats.unreadMessages, icon: Mail, color: 'bg-red-500' },
     ];
 
     return (
@@ -28,7 +30,7 @@ export default function DashboardClient({ stats }: DashboardClientProps) {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                 {statCards.map((stat) => {
                     const Icon = stat.icon;
                     return (

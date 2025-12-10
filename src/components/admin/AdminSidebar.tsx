@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Calendar, Users, Settings, LogOut, Ship } from 'lucide-react';
+import { LayoutDashboard, Calendar, Users, Settings, LogOut, Ship, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { signOut } from '@/app/actions/authActions';
 
@@ -12,6 +12,7 @@ export function AdminSidebar() {
     const links = [
         { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'Bookings', href: '/admin/bookings', icon: Calendar },
+        { name: 'Messages', href: '/admin/messages', icon: Mail },
         { name: 'Customers', href: '/admin/customers', icon: Users },
         { name: 'Tours', href: '/admin/tours', icon: Ship },
         { name: 'Settings', href: '/admin/settings', icon: Settings },

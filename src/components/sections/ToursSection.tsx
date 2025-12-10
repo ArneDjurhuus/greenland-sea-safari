@@ -41,7 +41,7 @@ export function ToursSection() {
                                     </div>
                                 </div>
 
-                                <div className="p-6 flex flex-col flex-grow">
+                                <div className="p-6 flex flex-col grow">
                                     <h3 className="font-serif text-xl font-bold text-arctic-blue mb-2 line-clamp-2 group-hover:text-arctic-gold transition-colors">
                                         {tour.title}
                                     </h3>
@@ -51,7 +51,7 @@ export function ToursSection() {
                                         <span>{tour.duration}</span>
                                     </div>
 
-                                    <p className="text-sm text-arctic-night/70 mb-6 line-clamp-3 flex-grow">
+                                    <p className="text-sm text-arctic-night/70 mb-6 line-clamp-3 grow">
                                         {tour.description}
                                     </p>
 

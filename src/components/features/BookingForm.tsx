@@ -93,7 +93,7 @@ export function BookingForm({ tour }: BookingFormProps) {
             {mobileSummaryOpen && (
                 <div id="mobile-booking-summary" className="px-4 pb-4 border-t border-white/10 pt-4 space-y-3 animate-in slide-in-from-bottom-2 duration-200">
                     <div className="flex gap-3">
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0">
                             <Image
                                 src={tour.image}
                                 alt=""
@@ -272,7 +272,7 @@ export function BookingForm({ tour }: BookingFormProps) {
                         <h3 className="font-serif text-xl font-bold mb-6 text-arctic-gold">Booking Summary</h3>
 
                         <div className="flex gap-4 mb-6 pb-6 border-b border-white/10">
-                            <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0">
                                 <Image
                                     src={tour.image}
                                     alt=""

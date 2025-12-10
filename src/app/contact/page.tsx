@@ -104,7 +104,7 @@ export default function ContactPage() {
                     <div className="bg-white p-8 rounded-2xl shadow-xl border border-arctic-ice/20 h-fit">
                         <div className="flex items-center gap-3 mb-6">
                             <MessageSquare className="w-6 h-6 text-arctic-gold" />
-                            <Heading level={3} className="!mb-0">Send a Message</Heading>
+                            <Heading level={3} className="mb-0!">Send a Message</Heading>
                         </div>
 
                         <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>

@@ -35,7 +35,7 @@ Heading.displayName = "Heading";
 export const Text = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
     ({ className, children, ...props }, ref) => {
         return (
-            <p ref={ref} className={cn("leading-7 text-arctic-night/80 [&:not(:first-child)]:mt-6", className)} {...props}>
+            <p ref={ref} className={cn("leading-7 text-arctic-night/80 not-first:mt-6", className)} {...props}>
                 {children}
             </p>
         );

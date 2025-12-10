@@ -32,7 +32,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                     sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-arctic-blue/40 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-gradient-to-t from-arctic-white via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-arctic-white via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 container mx-auto">
                     <div className="max-w-3xl">
                         <span className="inline-block px-3 py-1 bg-arctic-gold text-arctic-night text-xs font-bold rounded mb-4">
@@ -61,7 +61,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {tour.highlights.map((item, idx) => (
                                     <li key={idx} className="flex items-center gap-3 p-4 bg-white shadow-sm border border-arctic-ice/20 rounded-lg">
-                                        <Check className="text-arctic-green w-5 h-5 flex-shrink-0" />
+                                        <Check className="text-arctic-green w-5 h-5 shrink-0" />
                                         <span className="text-arctic-night/80">{item}</span>
                                     </li>
                                 ))}
@@ -100,8 +100,8 @@ export function TourDetail({ tour }: TourDetailProps) {
 
                     {/* Sidebar */}
                     <div className="lg:col-span-1 space-y-8">
-                        {/* Booking Card */}
-                        <div className="bg-white p-6 rounded-xl shadow-lg border border-arctic-ice/20 sticky top-24">
+                        {/* Booking Card - Static, no sticky behavior */}
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-arctic-ice/20">
                             <Heading level={4} className="mb-4">Book This Tour</Heading>
                             <div className="flex justify-between items-center mb-6">
                                 <span className="text-3xl font-bold text-arctic-blue">{tour.price}</span>
@@ -121,7 +121,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                             <div className="bg-arctic-ice/10 p-6 rounded-xl">
                                 <div className="flex items-center gap-2 mb-4">
                                     <Info className="w-5 h-5 text-arctic-blue" />
-                                    <Heading level={4} className="!text-lg !mb-0">What to Bring</Heading>
+                                    <Heading level={4} className="text-lg! mb-0!">What to Bring</Heading>
                                 </div>
                                 <ul className="space-y-2">
                                     {tour.whatToBring.map((item, idx) => (
@@ -136,7 +136,7 @@ export function TourDetail({ tour }: TourDetailProps) {
                         {/* Included */}
                         {tour.included && (
                             <div className="bg-arctic-green/5 p-6 rounded-xl">
-                                <Heading level={4} className="!text-lg mb-4 text-arctic-green/80">Included</Heading>
+                                <Heading level={4} className="text-lg! mb-4 text-arctic-green/80">Included</Heading>
                                 <ul className="space-y-2">
                                     {tour.included.map((item, idx) => (
                                         <li key={idx} className="text-sm text-arctic-night/80 flex gap-2">
@@ -150,8 +150,8 @@ export function TourDetail({ tour }: TourDetailProps) {
                 </div>
             </div>
 
-            {/* Mobile Fixed Booking Bar */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-arctic-ice/20 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between">
+            {/* Fixed Booking Bar - Always visible at bottom */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-arctic-ice/20 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between">
                 <div>
                     <p className="text-xs text-arctic-night/60">From</p>
                     <p className="text-xl font-bold text-arctic-blue">{tour.price}</p>

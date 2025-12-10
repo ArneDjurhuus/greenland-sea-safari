@@ -142,7 +142,7 @@ export function AboutSection() {
                             <div className="bg-arctic-blue/5 p-8 rounded-xl border border-arctic-blue/10">
                                 <Heading level={3} className="text-center mb-6">A Shared Vision</Heading>
                                 <Text className="text-center max-w-2xl mx-auto italic">
-                                    "United by a shared passion for Greenland’s breathtaking nature, Hans and Flemming founded Greenland Sea Safari to offer exclusive and immersive tours in Ilulissat Icefjord and Disko Bay... Together, they’re committed to delivering outstanding service and showcasing the raw, majestic beauty of Greenland—one journey at a time."
+                                    &ldquo;United by a shared passion for Greenland&apos;s breathtaking nature, Hans and Flemming founded Greenland Sea Safari to offer exclusive and immersive tours in Ilulissat Icefjord and Disko Bay... Together, they&apos;re committed to delivering outstanding service and showcasing the raw, majestic beauty of Greenland—one journey at a time.&rdquo;
                                 </Text>
                             </div>
 

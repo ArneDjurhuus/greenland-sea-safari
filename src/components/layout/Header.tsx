@@ -93,7 +93,7 @@ export function Header() {
                                             <img
                                                 src={tour.image}
                                                 alt={tour.title}
-                                                className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+                                                className="w-12 h-12 rounded-lg object-cover shrink-0"
                                             />
                                             <div className="min-w-0">
                                                 <p className="text-sm font-bold text-arctic-blue truncate">{tour.title}</p>
@@ -124,7 +124,7 @@ export function Header() {
 
             {/* Mobile Nav Overlay */}
             {mobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 bg-white z-[60] flex flex-col min-h-[100dvh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
+                <div className="md:hidden fixed inset-0 bg-white z-60 flex flex-col min-h-dvh overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
                     {/* Internal Menu Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
                         <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-serif text-2xl font-bold tracking-tight">

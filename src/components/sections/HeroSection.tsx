@@ -96,7 +96,7 @@ export function HeroSection() {
                     />
                 )}
                 <div className="absolute inset-0 bg-arctic-night/40 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-arctic-night/90" />
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-arctic-night/90" />
             </div>
 
             {/* Content */}
@@ -108,7 +108,7 @@ export function HeroSection() {
                 >
                     <Heading level={1} className="text-white mb-6 drop-shadow-lg">
                         Experience the Magic of <br className="hidden md:block" />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-arctic-ice to-arctic-gold">
+                        <span className="text-transparent bg-clip-text bg-linear-to-r from-arctic-ice to-arctic-gold">
                             Greenland
                         </span>
                     </Heading>

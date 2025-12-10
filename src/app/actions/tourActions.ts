@@ -13,6 +13,7 @@ export async function createTour(formData: FormData) {
         duration: formData.get('duration') as string,
         price_dkk: parseInt(formData.get('price_dkk') as string),
         max_guests: parseInt(formData.get('max_guests') as string),
+        image_url: formData.get('image_url') as string,
         is_active: formData.get('is_active') === 'on',
     };
 
@@ -38,6 +39,7 @@ export async function updateTour(id: string, formData: FormData) {
         duration: formData.get('duration') as string,
         price_dkk: parseInt(formData.get('price_dkk') as string),
         max_guests: parseInt(formData.get('max_guests') as string),
+        image_url: formData.get('image_url') as string,
         is_active: formData.get('is_active') === 'on',
     };
 

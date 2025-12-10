@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Heading } from '@/components/ui/Typography';
+
 import { Search, Mail, Phone, Calendar } from 'lucide-react';
 import { CustomerData } from './types';
 

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
-import ToursClient from './ToursClient';
+import ToursClient from '@/app/admin/(authenticated)/tours/ToursClient';
 import { TourData } from './types';
+
 
 export default async function ToursPage() {
     const supabase = await createClient();

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Heading } from '@/components/ui/Typography';
+
 import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { TourData } from './types';
 import Modal from '@/components/ui/Modal';
@@ -95,9 +96,18 @@ export default function ToursClient({ initialTours }: ToursClientProps) {
                 ) : (
                     tours.map((tour) => (
                         <div key={tour.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group">
-                            {/* Tour Image Placeholder */}
-                            <div className="h-32 bg-linear-to-br from-arctic-blue to-arctic-night flex items-center justify-center">
-                                <span className="text-white/50 text-sm">Tour Image</span>
+                            {/* Tour Image */}
+                            <div className="h-32 bg-linear-to-br from-arctic-blue to-arctic-night flex items-center justify-center overflow-hidden relative">
+                                {tour.image_url ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img 
+                                        src={tour.image_url} 
+                                        alt={tour.title} 
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <span className="text-white/50 text-sm">Tour Image</span>
+                                )}
                             </div>
                             
                             {/* Tour Info */}
@@ -184,6 +194,17 @@ export default function ToursClient({ initialTours }: ToursClientProps) {
                             name="description"
                             defaultValue={editingTour?.description || ''}
                             rows={3}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-arctic-blue focus:border-transparent"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                        <input
+                            type="text"
+                            name="image_url"
+                            defaultValue={editingTour?.image_url || ''}
+                            placeholder="/images/your-image.jpg or https://..."
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-arctic-blue focus:border-transparent"
                         />
                     </div>

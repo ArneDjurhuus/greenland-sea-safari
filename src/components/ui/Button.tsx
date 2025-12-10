@@ -16,12 +16,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
-        const baseStyles = "inline-flex items-center justify-center rounded-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-arctic-gold disabled:pointer-events-none disabled:opacity-50 font-sans tracking-wide";
+        const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-arctic-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 font-sans tracking-wide";
 
         const variants = {
-            primary: "bg-arctic-blue text-white hover:bg-arctic-blue/90 shadow-lg shadow-arctic-blue/20",
-            secondary: "bg-arctic-gold text-arctic-night hover:bg-arctic-gold/90 shadow-md",
-            outline: "border border-arctic-ice text-arctic-blue hover:bg-arctic-ice/10",
+            primary: "bg-arctic-blue text-white hover:bg-arctic-blue/90 hover:shadow-lg shadow-md shadow-arctic-blue/20 active:scale-[0.98]",
+            secondary: "bg-arctic-gold text-arctic-night hover:bg-arctic-gold/90 hover:shadow-lg shadow-md active:scale-[0.98]",
+            outline: "border-2 border-arctic-ice text-arctic-blue hover:bg-arctic-ice/10 hover:border-arctic-blue/30",
             ghost: "text-arctic-blue hover:text-arctic-blue/80 hover:bg-arctic-ice/10",
         };
 

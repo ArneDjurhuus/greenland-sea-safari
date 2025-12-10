@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Heading, Text } from "@/components/ui/Typography";
 import { createPortal } from "react-dom";
@@ -8,20 +9,68 @@ import { ShieldCheck, Users, X, MapPin, ExternalLink } from "lucide-react";
 
 export function AboutSection() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const openButtonRef = useRef<HTMLButtonElement>(null);
+
+    // Handle Escape key to close modal
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            setIsModalOpen(false);
+        }
+    }, []);
+
+    // Focus trap and body scroll lock
+    useEffect(() => {
+        if (isModalOpen) {
+            const previouslyFocused = document.activeElement as HTMLElement;
+            closeButtonRef.current?.focus();
+            document.addEventListener('keydown', handleKeyDown);
+            document.body.style.overflow = 'hidden';
+
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown);
+                document.body.style.overflow = '';
+                previouslyFocused?.focus();
+            };
+        }
+    }, [isModalOpen, handleKeyDown]);
+
+    // Handle focus trap
+    const handleTabKey = (e: React.KeyboardEvent) => {
+        if (e.key !== 'Tab' || !modalRef.current) return;
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        if (e.shiftKey && document.activeElement === firstElement) {
+            lastElement?.focus();
+            e.preventDefault();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+            firstElement?.focus();
+            e.preventDefault();
+        }
+    };
 
     return (
-        <div id="about" className="py-24 bg-arctic-ice/20">
+        <section id="about" className="py-24 bg-arctic-ice/20" aria-labelledby="about-section-heading">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row items-center gap-12">
                     <div className="md:w-1/2">
-                        <div className="relative rounded-lg overflow-hidden shadow-xl aspect-video bg-cover bg-center"
-                            style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1548502621-e8d13af21699?q=80&w=2069")' }} // Boat/Captain image
-                        >
+                        <div className="relative rounded-lg overflow-hidden shadow-xl aspect-video">
+                            <Image
+                                src="https://images.unsplash.com/photo-1548502621-e8d13af21699?q=80&w=2069"
+                                alt="Captain navigating a boat through Arctic waters"
+                                fill
+                                className="object-cover object-center"
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                            />
                             <div className="absolute inset-0 bg-arctic-blue/10 mix-blend-multiply" />
                         </div>
                     </div>
                     <div className="md:w-1/2">
-                        <Heading level={2} className="mb-6">About Greenland Sea Safari</Heading>
+                        <Heading level={2} id="about-section-heading" className="mb-6">About Greenland Sea Safari</Heading>
                         <Text className="mb-6">
                             Founded on a passion for the Arctic, Greenland Sea Safari is dedicated to providing exclusive, safe, and sustainable adventures in the waters of Ilulissat.
                         </Text>
@@ -40,28 +89,36 @@ export function AboutSection() {
                             </div>
                         </div>
 
-                        <Button onClick={() => setIsModalOpen(true)} variant="outline">Learn More About Us!</Button>
+                        <Button ref={openButtonRef} onClick={() => setIsModalOpen(true)} variant="outline" aria-haspopup="dialog">Learn More About Us!</Button>
                     </div>
                 </div>
             </div>
 
             {/* About Us Modal */}
             {isModalOpen && createPortal(
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-arctic-night/90 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="modal-title"
+                    onKeyDown={handleTabKey}
+                >
+                    <div className="absolute inset-0 bg-arctic-night/90 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} aria-hidden="true" />
 
-                    <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 animate-in fade-in zoom-in duration-300">
+                    <div ref={modalRef} className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 animate-in fade-in zoom-in duration-300">
                         <button
+                            ref={closeButtonRef}
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors z-20"
+                            className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors z-20 focus:outline-none focus:ring-2 focus:ring-arctic-blue"
+                            aria-label="Close modal"
                         >
-                            <X className="w-6 h-6 text-arctic-night" />
+                            <X className="w-6 h-6 text-arctic-night" aria-hidden="true" />
                         </button>
 
                         <div className="p-8 md:p-12 space-y-12 text-arctic-night">
                             {/* Header */}
                             <div className="text-center space-y-4">
-                                <Heading level={2} className="text-arctic-blue">Greenland Sea Safari</Heading>
+                                <Heading level={2} id="modal-title" className="text-arctic-blue">Greenland Sea Safari</Heading>
                                 <p className="text-xl font-serif italic text-arctic-blue/70">From a dream of sharing experiences at sea to creating local adventures</p>
                             </div>
 
@@ -96,15 +153,15 @@ export function AboutSection() {
                                     <Heading level={4}>Company Details</Heading>
                                     <ul className="space-y-3 text-sm">
                                         <li className="flex items-center gap-3">
-                                            <ShieldCheck className="w-5 h-5 text-arctic-green" />
+                                            <ShieldCheck className="w-5 h-5 text-arctic-green" aria-hidden="true" />
                                             <span><strong>CVR:</strong> 42305766</span>
                                         </li>
                                         <li className="flex items-center gap-3">
-                                            <Users className="w-5 h-5 text-arctic-blue" />
+                                            <Users className="w-5 h-5 text-arctic-blue" aria-hidden="true" />
                                             <span><strong>Owners:</strong> Hans Djurhuus & Flemming Bisgaard</span>
                                         </li>
                                         <li className="flex items-center gap-3">
-                                            <MapPin className="w-5 h-5 text-arctic-gold" />
+                                            <MapPin className="w-5 h-5 text-arctic-gold" aria-hidden="true" />
                                             <span>Aron Mathisesenip aqq 9B, Ilulissat, 3952</span>
                                         </li>
                                     </ul>
@@ -119,8 +176,8 @@ export function AboutSection() {
                                             <h5 className="font-bold text-arctic-blue mb-1">Blue Trail Guesthouse</h5>
                                             <p className="text-xs text-arctic-night/60 mb-2">Accommodation for your stay</p>
                                             <div className="space-y-1 text-xs">
-                                                <a href="https://bluetrailguesthouse.com" target="_blank" className="flex items-center gap-2 hover:text-arctic-blue transition-colors">
-                                                    <ExternalLink className="w-3 h-3" /> bluetrailguesthouse.com
+                                                <a href="https://bluetrailguesthouse.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-arctic-blue transition-colors">
+                                                    <ExternalLink className="w-3 h-3" aria-hidden="true" /> bluetrailguesthouse.com
                                                 </a>
                                             </div>
                                         </div>
@@ -130,7 +187,7 @@ export function AboutSection() {
                                             <p className="text-xs text-arctic-night/60 mb-2">Ilulissat Logistics Services</p>
                                             <div className="space-y-1 text-xs">
                                                 <p className="flex items-center gap-2">
-                                                    <ExternalLink className="w-3 h-3" /> Facebook: ilulissat.logistics.services
+                                                    <ExternalLink className="w-3 h-3" aria-hidden="true" /> Facebook: ilulissat.logistics.services
                                                 </p>
                                             </div>
                                         </div>
@@ -143,6 +200,6 @@ export function AboutSection() {
                 </div>,
                 document.body
             )}
-        </div>
+        </section>
     );
 }

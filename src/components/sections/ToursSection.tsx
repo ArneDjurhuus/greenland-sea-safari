@@ -1,24 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 import { tours } from "@/data/tours";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heading, Text } from "@/components/ui/Typography";
-import { Clock, Tag } from "lucide-react";
-import Image from "next/image";
+import { Clock } from "lucide-react";
 
 export function ToursSection() {
     return (
-        <div id="tours" className="py-16 md:py-24 bg-arctic-white relative overflow-hidden">
+        <section id="tours" className="py-16 md:py-24 bg-arctic-white relative overflow-hidden" aria-labelledby="tours-section-heading">
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-arctic-ice/10 rounded-full blur-3xl -z-10" />
-            <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-arctic-gold/5 rounded-full blur-3xl -z-10" />
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-arctic-ice/10 rounded-full blur-3xl -z-10" aria-hidden="true" />
+            <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-arctic-gold/5 rounded-full blur-3xl -z-10" aria-hidden="true" />
 
             <div className="container mx-auto px-4">
                 <div className="text-center mb-10 md:mb-16">
-                    <Heading level={2} className="mb-4">Unforgettable Adventures</Heading>
+                    <Heading level={2} id="tours-section-heading" className="mb-4">Unforgettable Adventures</Heading>
                     <Text className="max-w-2xl mx-auto">
                         Choose from our curated selection of exclusive tours designed to show you standard Arctic beauty from unique perspectives.
                     </Text>
@@ -27,13 +27,14 @@ export function ToursSection() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {tours.map((tour) => (
                         <Link href={`/tours/${tour.id}`} key={tour.id} className="group block h-full">
-                            <Card className="flex flex-col h-full bg-white border-0 shadow-lg shadow-arctic-blue/5 transition-transform duration-300 group-hover:-translate-y-1">
+                            <Card className="flex flex-col h-full bg-white border-0 shadow-lg shadow-arctic-blue/5 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
                                 <div className="relative h-48 w-full overflow-hidden">
-                                    <div
-                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                                        style={{
-                                            backgroundImage: `url(${tour.image})`
-                                        }}
+                                    <Image
+                                        src={tour.image}
+                                        alt={`${tour.title} - Arctic tour experience`}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                     />
                                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-arctic-blue shadow-sm">
                                         {tour.price}
@@ -46,7 +47,7 @@ export function ToursSection() {
                                     </h3>
 
                                     <div className="flex items-center gap-2 text-sm text-arctic-night/60 mb-4">
-                                        <Clock size={16} />
+                                        <Clock size={16} aria-hidden="true" />
                                         <span>{tour.duration}</span>
                                     </div>
 
@@ -63,6 +64,6 @@ export function ToursSection() {
                     ))}
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { Tour } from '@/data/tours';
 import { Button } from '@/components/ui/Button';
 import { Heading, Text } from '@/components/ui/Typography';
@@ -21,10 +22,15 @@ export function TourDetail({ tour }: TourDetailProps) {
     return (
         <div className="min-h-screen pt-20">
             {/* Hero */}
-            <div
-                className="relative h-[60vh] w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${tour.image})` }}
-            >
+            <div className="relative h-[60vh] w-full">
+                <Image
+                    src={tour.image}
+                    alt={`${tour.title} - scenic view of the Arctic tour`}
+                    fill
+                    priority
+                    className="object-cover object-center"
+                    sizes="100vw"
+                />
                 <div className="absolute inset-0 bg-arctic-blue/40 mix-blend-multiply" />
                 <div className="absolute inset-0 bg-gradient-to-t from-arctic-white via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 container mx-auto">
